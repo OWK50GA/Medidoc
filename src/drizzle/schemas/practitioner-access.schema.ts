@@ -18,15 +18,15 @@ export const practitioner_access = pgTable(
     organizationId: uuid("organization_id")
       .references(() => providers.id)
       .notNull(),
+    organizationAccessId: uuid("organization_access_id")
+      .references(() => organization_access.id)
+      .notNull(),
     grantedBy: uuid("granted_by")
       .references(() => admins.id)
       .notNull(),
     status: text("status", { enum: ["active", "revoked"] }).notNull(),
     grantedAt: timestamp("granted_at"),
-    revokedAt: timestamp("revoked_at"),
-    expiresAt: timestamp("expires_at")
-      .references(() => organization_access.expiresAt)
-      .notNull()
+    revokedAt: timestamp("revoked_at")
   },
   table => [
     index("practitioner_access_patient_id_idx").on(table.patientId),
