@@ -1,12 +1,15 @@
-import { and, desc, eq, sql } from "drizzle-orm";
+import { and, desc, eq, sql, isNull } from "drizzle-orm";
 import db from "../configs/db";
-import { users } from "../drizzle/schemas/user.schema";
-import { admins } from "../drizzle/schemas/admins.schema";
-import { practitioners } from "../drizzle/schemas/practitioners.schema";
-import { providers } from "../drizzle/schemas/providers.schema";
-import { patients } from "../drizzle/schemas/patients.schema";
-import { organization_access } from "../drizzle/schemas/organization-access.schema";
-import { audit_logs } from "../drizzle/schemas/audit-logs.schema";
+import {
+  users,
+  admins,
+  practitioners,
+  providers,
+  patients,
+  audit_logs,
+  organization_access,
+  practitioner_access
+} from "@/drizzle";
 import { ApiError } from "../utils/api-error";
 import { hashPassword } from "../helpers/auth.helpers";
 import {
@@ -271,6 +274,19 @@ export class OrganizationService {
       .where(eq(practitioners.organizationId, organizationId));
   }
 
+  static async getPractitionerAccessList(patientId: string) {
+    return db
+      .select()
+      .from(practitioner_access)
+      .where(
+        and(
+          eq(practitioner_access.patientId, patientId),
+          eq(practitioner_access.status, "active"),
+          isNull(practitioner_access.revokedAt)
+        )
+      );
+  }
+
   static async createPractitioner(
     organizationId: string,
     { name, email, password }: CreatePractitionerType
@@ -352,5 +368,63 @@ export class OrganizationService {
     });
 
     return approvedPractitioner;
+  }
+
+  static async addPractitionerAccess(
+    adminId: string,
+    organizationId: string,
+    patientId: string,
+    practitionerId: string
+  ) {
+    const access = await db.query.practitioner_access.findFirst({
+      where: and(
+        eq(practitioner_access.patientId, patientId),
+        eq(practitioner_access.practitionerId, practitionerId)
+      )
+    });
+
+    if (access) {
+      throw ApiError.badRequest("Organization access has already been granted");
+    }
+
+    const newAccess = await db
+      .insert(practitioner_access)
+      .values({
+        patientId: patientId,
+        practitionerId: practitionerId,
+        organizationId: organizationId,
+        grantedBy: adminId,
+        status: "active",
+        grantedAt: new Date()
+      })
+      .returning();
+
+    return newAccess;
+  }
+
+  static async removePractitionerAccess(patientId: string, accessId: string) {
+    const access = await db.query.practitioner_access.findFirst({
+      where: eq(practitioner_access.id, accessId)
+    });
+
+    if (!access) {
+      throw ApiError.badRequest("Invalid access id");
+    }
+
+    const removedAccess = await db
+      .update(practitioner_access)
+      .set({
+        status: "revoked",
+        revokedAt: new Date()
+      })
+      .where(
+        and(
+          eq(practitioner_access.patientId, patientId),
+          eq(practitioner_access.id, accessId)
+        )
+      )
+      .returning();
+
+    return removedAccess;
   }
 }

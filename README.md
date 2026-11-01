@@ -62,7 +62,7 @@ A production-ready Electronic Health Records (EHR) REST API built with Node.js, 
 
 ## Architecture
 
-```
+```plaintext
 src/
 ├── configs/          # Database, Redis, Cloudinary, and app config
 ├── controllers/      # Route handlers (thin, delegate to services)
@@ -252,20 +252,20 @@ All routes are prefixed with `/api/v1`. Authenticated routes require a `Bearer` 
 
 ### Access Control
 
-| Method   | Endpoint                                              | Description                       |
-| -------- | ----------------------------------------------------- | --------------------------------- |
-| GET/POST | `/patients/:id/organization-access`                   | Manage organization access grants |
-| POST     | `/patients/:id/organization-access/:accessId/revoke`  | Revoke organization access        |
-| GET/POST | `/patients/:id/practitioner-access`                   | Manage practitioner access grants |
-| POST     | `/patients/:id/practitioner-access/:accessId/revoke`  | Revoke practitioner access        |
+| Method   | Endpoint                                                                         | Description                       |
+| -------- | -------------------------------------------------------------------------------- | --------------------------------- |
+| GET/POST | `/patients/:id/organization-access`                                              | Manage organization access grants |
+| POST     | `/patients/:id/organization-access/:accessId/revoke`                             | Revoke organization access        |
+| GET/POST | `/organizations/:organizationId/:patientId/practitioner-access`                  | Manage practitioner access grants |
+| POST     | `/organizations/:organizationId/:patientId/practitioner-access/:accessId/revoke` | Revoke practitioner access        |
 
 ### Appointments
 
-| Method   | Endpoint                                             | Description                 |
-| -------- | ---------------------------------------------------- | --------------------------- |
-| GET/POST | `/patients/:id/appointments`                         | List or book appointments   |
-| POST     | `/appointments/:id/check-in`                         | Check in for an appointment |
-| PATCH    | `/patients/:id/appointments/:appointmentId/cancel`   | Cancel an appointment       |
+| Method   | Endpoint                                           | Description                 |
+| -------- | -------------------------------------------------- | --------------------------- |
+| GET/POST | `/patients/:id/appointments`                       | List or book appointments   |
+| POST     | `/appointments/:id/check-in`                       | Check in for an appointment |
+| PATCH    | `/patients/:id/appointments/:appointmentId/cancel` | Cancel an appointment       |
 
 ### Invoices & Payments
 
@@ -278,36 +278,36 @@ All routes are prefixed with `/api/v1`. Authenticated routes require a `Bearer` 
 
 ### Consent Forms
 
-| Method   | Endpoint                                                  | Description           |
-| -------- | --------------------------------------------------------- | --------------------- |
-| GET/POST | `/patients/:id/consent-forms`                             | List or submit forms  |
-| PATCH    | `/patients/:id/consent-forms/:consentFormId/sign`         | Patient signs a form  |
+| Method   | Endpoint                                          | Description          |
+| -------- | ------------------------------------------------- | -------------------- |
+| GET/POST | `/patients/:id/consent-forms`                     | List or submit forms |
+| PATCH    | `/patients/:id/consent-forms/:consentFormId/sign` | Patient signs a form |
 
 ### Organization & Provider Management
 
-| Method   | Endpoint                                                         | Description                         |
-| -------- | ---------------------------------------------------------------- | ----------------------------------- |
-| GET      | `/organizations/public`                                          | List publicly visible organizations |
-| GET/POST | `/organizations/:id/admins`                                      | List or invite organization admins  |
-| POST     | `/admins/:id/approve`                                            | Approve an admin                    |
-| GET/POST | `/organizations/:id/practitioners`                               | List or add practitioners           |
-| POST     | `/practitioners/:id/approve`                                     | Approve a practitioner              |
-| GET      | `/organizations/:id/practitioners/public`                        | List public practitioners           |
-| GET      | `/organizations/:id/practitioners/:practitionerId/availability`  | Get practitioner availability       |
-| GET      | `/organizations/:id/patients`                                    | List patients in an organization    |
-| GET      | `/organizations/:id/appointments`                                | List organization appointments      |
-| GET      | `/organizations/:id/invoices`                                    | List organization invoices          |
+| Method   | Endpoint                                                        | Description                         |
+| -------- | --------------------------------------------------------------- | ----------------------------------- |
+| GET      | `/organizations/public`                                         | List publicly visible organizations |
+| GET/POST | `/organizations/:id/admins`                                     | List or invite organization admins  |
+| POST     | `/admins/:id/approve`                                           | Approve an admin                    |
+| GET/POST | `/organizations/:id/practitioners`                              | List or add practitioners           |
+| POST     | `/practitioners/:id/approve`                                    | Approve a practitioner              |
+| GET      | `/organizations/:id/practitioners/public`                       | List public practitioners           |
+| GET      | `/organizations/:id/practitioners/:practitionerId/availability` | Get practitioner availability       |
+| GET      | `/organizations/:id/patients`                                   | List patients in an organization    |
+| GET      | `/organizations/:id/appointments`                               | List organization appointments      |
+| GET      | `/organizations/:id/invoices`                                   | List organization invoices          |
 
 ### Platform Administration
 
-| Method | Endpoint                              | Description                  |
-| ------ | ------------------------------------- | ---------------------------- |
-| GET    | `/platform/organizations`             | List all organizations       |
-| GET    | `/platform/stats`                     | Platform-wide statistics     |
-| POST   | `/platform/organizations/:id/verify`  | Verify an organization       |
-| POST   | `/platform/organizations/:id/suspend` | Suspend an organization      |
-| POST   | `/platform/organizations/:id/reinstate` | Reinstate a suspended org  |
-| GET    | `/audit-logs`                         | Retrieve platform audit logs |
+| Method | Endpoint                                | Description                  |
+| ------ | --------------------------------------- | ---------------------------- |
+| GET    | `/platform/organizations`               | List all organizations       |
+| GET    | `/platform/stats`                       | Platform-wide statistics     |
+| POST   | `/platform/organizations/:id/verify`    | Verify an organization       |
+| POST   | `/platform/organizations/:id/suspend`   | Suspend an organization      |
+| POST   | `/platform/organizations/:id/reinstate` | Reinstate a suspended org    |
+| GET    | `/audit-logs`                           | Retrieve platform audit logs |
 
 Full interactive documentation is available via Swagger UI at `GET /api/v1/docs`.
 
