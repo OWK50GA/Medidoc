@@ -28,10 +28,16 @@ export const clinical_entries = pgTable(
     eventType: text("event_type", {
       enum: [
         "observation",
+        "antenatal_visit",
+        "delivery",
+        "newborn_record",
+        "vaccination",
         "order",
+        "referral",
         "procedure",
         "lab_result",
         "radiology",
+        "ultrasound",
         "vital_signs",
         "progress_note",
         "note"

@@ -3,6 +3,7 @@ import { practitioners } from "./practitioners.schema";
 import { patients } from "./patients.schema";
 import { providers } from "./providers.schema";
 import { admins } from "./admins.schema";
+import { organization_access } from "./organization-access.schema";
 
 export const practitioner_access = pgTable(
   "practitioner_access",
@@ -22,7 +23,10 @@ export const practitioner_access = pgTable(
       .notNull(),
     status: text("status", { enum: ["active", "revoked"] }).notNull(),
     grantedAt: timestamp("granted_at"),
-    revokedAt: timestamp("revoked_at")
+    revokedAt: timestamp("revoked_at"),
+    expiresAt: timestamp("expires_at")
+      .references(() => organization_access.expiresAt)
+      .notNull()
   },
   table => [
     index("practitioner_access_patient_id_idx").on(table.patientId),
