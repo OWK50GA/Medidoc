@@ -376,23 +376,39 @@ export class OrganizationService {
     patientId: string,
     practitionerId: string
   ) {
-    const access = await db.query.practitioner_access.findFirst({
-      where: and(
-        eq(practitioner_access.patientId, patientId),
-        eq(practitioner_access.practitionerId, practitionerId)
-      )
-    });
+    const [existingAccess, orgAccess] = await Promise.all([
+      db.query.practitioner_access.findFirst({
+        where: and(
+          eq(practitioner_access.patientId, patientId),
+          eq(practitioner_access.practitionerId, practitionerId)
+        )
+      }),
+      db.query.organization_access.findFirst({
+        where: and(
+          eq(organization_access.patientId, patientId),
+          eq(organization_access.organizationId, organizationId),
+          eq(organization_access.status, "active")
+        )
+      })
+    ]);
 
-    if (access) {
-      throw ApiError.badRequest("Organization access has already been granted");
+    if (existingAccess) {
+      throw ApiError.badRequest("Practitioner access has already been granted");
+    }
+
+    if (!orgAccess) {
+      throw ApiError.badRequest(
+        "Organization does not have active access to this patient"
+      );
     }
 
     const newAccess = await db
       .insert(practitioner_access)
       .values({
-        patientId: patientId,
-        practitionerId: practitionerId,
-        organizationId: organizationId,
+        patientId,
+        practitionerId,
+        organizationId,
+        organizationAccessId: orgAccess.id,
         grantedBy: adminId,
         status: "active",
         grantedAt: new Date()
