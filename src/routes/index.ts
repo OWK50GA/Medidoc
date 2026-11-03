@@ -7,6 +7,7 @@ import patientRoutes from "./patient.routes";
 import auditLogRoutes from "./audit-log.routes";
 import { patientReferralRouter, referralRouter } from "./referral.routes";
 import pregnancyRoutes from "./pregnancy.routes";
+import reproductiveProfileRoutes from "./reproductive-profile.routes";
 
 const router = Router();
 
@@ -17,6 +18,7 @@ router.use("/v1", organizationRoutes);
 router.use("/v1", auditLogRoutes);
 router.use("/v1/patients", patientReferralRouter);
 router.use("/v1/patients", pregnancyRoutes);
+router.use("/v1/patients", reproductiveProfileRoutes);
 router.use("/v1", referralRouter);
 router.use("/auth", oauthRoutes); //* Here versioning is not given because, in google and github callback routes, we are not using versioning. process.env.GOOGLE_REDIRECT_URI
 

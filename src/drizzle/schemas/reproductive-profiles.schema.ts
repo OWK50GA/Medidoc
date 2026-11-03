@@ -8,6 +8,23 @@ import {
 } from "drizzle-orm/pg-core";
 import { patients } from "./patients.schema";
 
+export const HEALTH_CONDITIONS = [
+  "pcos",
+  "endometriosis",
+  "fibroids",
+  "thyroid_disorder",
+  "diabetes",
+  "hypertension",
+  "anaemia",
+  "hiv",
+  "sickle_cell",
+  "depression",
+  "anxiety",
+  "other"
+] as const;
+
+export type HealthCondition = (typeof HEALTH_CONDITIONS)[number];
+
 export const reproductive_profiles = pgTable("reproductive_profiles", {
   id: uuid("id").primaryKey().defaultRandom(),
   patientId: uuid("patient_id")
