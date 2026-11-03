@@ -1,4 +1,6 @@
 import * as z from "zod";
+import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
+extendZodWithOpenApi(z);
 
 const dateString = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, {
   error: "Date must be in YYYY-MM-DD format"

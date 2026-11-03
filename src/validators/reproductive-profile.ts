@@ -1,4 +1,6 @@
 import * as z from "zod";
+import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
+extendZodWithOpenApi(z);
 import { HEALTH_CONDITIONS } from "../drizzle/schemas/reproductive-profiles.schema";
 
 const birthControlDetailsSchema = z.union([
