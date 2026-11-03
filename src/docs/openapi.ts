@@ -5,6 +5,8 @@ import {
   extendZodWithOpenApi
 } from "@asteasolutions/zod-to-openapi";
 import { registerFemHealthPaths } from "./femhealth.openapi";
+import { registerPatientPaths } from "./patient.openapi";
+import { registerOrganizationPaths } from "./organization.openapi";
 import {
   ChangePasswordSchema,
   DeleteAccountSchema,
@@ -583,6 +585,8 @@ registry.registerPath({
 });
 
 registerFemHealthPaths(registry);
+registerPatientPaths(registry);
+registerOrganizationPaths(registry);
 
 const generator = new OpenApiGeneratorV3(registry.definitions);
 
