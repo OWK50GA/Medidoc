@@ -19,7 +19,8 @@
     "lint:check": "eslint .",
     "lint:fix": "eslint . --fix",
     "format:check": "npx prettier . --check",
-    "format:fix": "npx prettier . --write"
+    "format:fix": "npx prettier . --write",
+    "test": "node --import tsx/esm --test src/**/*.test.ts"
   },
   "lint-staged": {
     "src/**/*.ts": [
