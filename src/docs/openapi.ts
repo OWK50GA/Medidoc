@@ -602,6 +602,10 @@ const generatedDocument = generator.generateDocument({
     {
       url: "http://localhost:4000",
       description: "Local development"
+    },
+    {
+      url: "https://medidoc.braintext.io",
+      description: "Medidoc API"
     }
   ]
 });
